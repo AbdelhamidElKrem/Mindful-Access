@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="appName">Taqwa Timekeeper</title>
+    <link rel="stylesheet" href="intention.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="icons/icon128.png" alt="Taqwa Timekeeper" width="64" height="64"
+                style="background: #ccc; border-radius: 50%;">
+        </div>
+
+        <div id="step-1" class="step active">
+            <h2 data-i18n="intentionCheck">Intention Check</h2>
+            <p data-i18n="qBeneficial">Are you accessing this for something beneficial?</p>
+            <div class="actions">
+                <button id="q1-yes" class="btn primary" data-i18n="yesBeneficial">Yes, it is beneficial</button>
+                <button id="q1-no" class="btn secondary" data-i18n="noMindless">No, mindless browsing</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="step hidden">
+            <h2 data-i18n="workContext">Work Context</h2>
+            <p data-i18n="qWorkTime">Are you currently in work time?</p>
+            <div class="actions">
+                <button id="q2-yes" class="btn primary" data-i18n="yes">Yes</button>
+                <button id="q2-no" class="btn secondary" data-i18n="no">No</button>
+            </div>
+        </div>
+
+        <div id="step-3" class="step hidden">
+            <h2 data-i18n="workRelevance">Work Relevance</h2>
+            <p data-i18n="qWorkRelated">Is this content related to your work or study?</p>
+            <div class="actions">
+                <button id="q3-yes" class="btn primary" data-i18n="yes">Yes</button>
+                <button id="q3-no" class="btn secondary" data-i18n="no">No</button>
+            </div>
+        </div>
+
+        <div id="step-time" class="step hidden">
+            <h2 data-i18n="timeLimit">Time Limit</h2>
+            <p data-i18n="qHowLong">How long do you need access?</p>
+            <div class="actions grid">
+                <button class="btn time-btn" data-time="1" data-i18n="min1">1 min (Test)</button>
+                <button class="btn time-btn" data-time="5" data-i18n="min5">5 min</button>
+                <button class="btn time-btn" data-time="10" data-i18n="min10">10 min</button>
+                <button class="btn time-btn" data-time="15" data-i18n="min15">15 min</button>
+            </div>
+            <!-- Custom time input could go here -->
+        </div>
+
+        <div id="blocked-msg" class="step hidden">
+            <h2 data-i18n="accessDenied">Access Denied</h2>
+            <p data-i18n="respectTime">Respect your time and intention.</p>
+            <p><i data-i18n="timeIsTrust">"Time is a trust."</i></p>
+            <div class="actions">
+                <button id="close-tab" class="btn secondary" data-i18n="closeTab">Close Tab</button>
+            </div>
+        </div>
+
+        <div id="focus-msg" class="step hidden">
+            <h2 data-i18n="focusActive">Focus Mode Active</h2>
+            <p data-i18n="focusMsg">You have enabled Focus Mode. No distractions allowed.</p>
+            <div class="actions">
+                <button id="close-tab-focus" class="btn secondary" data-i18n="closeTab">Close Tab</button>
+            </div>
+        </div>
+
+        <div id="prayer-msg" class="step hidden">
+            <h2 data-i18n="prayerTime">Prayer Time</h2>
+            <p data-i18n="prayerMsg">This is prayer time. Take a pause.</p>
+            <div class="actions">
+                <button id="close-tab-prayer" class="btn secondary" data-i18n="closeTab">Close Tab</button>
+                <button id="prayer-bypass" class="btn btn-text" style="font-size: 0.9em; color: #999;"
+                    data-i18n="continueAnyway">Continue anyway (Emergency)</button>
+            </div>
+        </div>
+    </div>
+    <script src="i18n.js"></script>
+    <script src="intention.js"></script>
+</body>
+
+</html>

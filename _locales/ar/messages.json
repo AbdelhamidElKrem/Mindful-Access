@@ -1,0 +1,140 @@
+{
+    "appName": {
+        "message": "تقوى تايم كيبر"
+    },
+    "appDesc": {
+        "message": "حافظ على وقتك ونيتك وتركيزك."
+    },
+    "intentionCheck": {
+        "message": "تجديد النية"
+    },
+    "qBeneficial": {
+        "message": "هل دخولك لهذا الموقع نافع؟"
+    },
+    "yesBeneficial": {
+        "message": "نعم، هو نافع"
+    },
+    "noMindless": {
+        "message": "لا، تصفح بلا هدف"
+    },
+    "workContext": {
+        "message": "وقت العمل"
+    },
+    "qWorkTime": {
+        "message": "هل أنت في وقت العمل حالياً؟"
+    },
+    "yes": {
+        "message": "نعم"
+    },
+    "no": {
+        "message": "لا"
+    },
+    "workRelevance": {
+        "message": "علاقة العمل"
+    },
+    "qWorkRelated": {
+        "message": "هل هذا المحتوى متعلق بعملك أو دراستك؟"
+    },
+    "timeLimit": {
+        "message": "المدة المتاحة"
+    },
+    "qHowLong": {
+        "message": "كم من الوقت تحتاج؟"
+    },
+    "min1": {
+        "message": "1 دقيقة (تجربة)"
+    },
+    "min5": {
+        "message": "5 دقائق"
+    },
+    "min10": {
+        "message": "10 دقائق"
+    },
+    "min15": {
+        "message": "15 دقيقة"
+    },
+    "min30": {
+        "message": "30 دقيقة"
+    },
+    "accessDenied": {
+        "message": "تم منع الوصول"
+    },
+    "respectTime": {
+        "message": "احترم وقتك ونيتك."
+    },
+    "timeIsTrust": {
+        "message": "\"الوقت أمانة\""
+    },
+    "closeTab": {
+        "message": "إغلاق الصفحة"
+    },
+    "focusActive": {
+        "message": "وضع التركيز مفعل"
+    },
+    "focusMsg": {
+        "message": "لقد قمت بتفعيل وضع التركيز. لا للمشتتات."
+    },
+    "prayerTime": {
+        "message": "وقت الصلاة"
+    },
+    "prayerMsg": {
+        "message": "حانت الصلاة. خذ قسطاً من الراحة."
+    },
+    "continueAnyway": {
+        "message": "المتابعة على أي حال (للضرورة)"
+    },
+    "focusMode": {
+        "message": "وضع التركيز"
+    },
+    "prayerBlocking": {
+        "message": "حظر وقت الصلاة"
+    },
+    "settings": {
+        "message": "الإعدادات"
+    },
+    "blockedWebsites": {
+        "message": "المواقع المحظورة"
+    },
+    "addWebsite": {
+        "message": "إضافة موقع"
+    },
+    "remove": {
+        "message": "حذف"
+    },
+    "prayerLocation": {
+        "message": "موقع الصلاة"
+    },
+    "locDesc": {
+        "message": "أدخل مدينتك ودولتك للحصول على مواقيت الصلاة."
+    },
+    "city": {
+        "message": "المدينة"
+    },
+    "country": {
+        "message": "الدولة"
+    },
+    "save": {
+        "message": "حفظ"
+    },
+    "locSaved": {
+        "message": "تم حفظ الموقع."
+    },
+    "errorUrl": {
+        "message": "خطأ: الرابط غير معروف. الرجاء المحاولة مرة أخرى."
+    },
+    "language": {
+        "message": "اللغة"
+    },
+    "defaultLang": {
+        "message": "الافتراضي للنظام"
+    },
+    "optionsTitle": {
+        "message": "إعدادات تقوى تايم كيبر"
+    },
+    "options_add_placeholder": {
+        "message": "example.com"
+    },
+    "useGps": {
+        "message": "استخدام GPS (تحديد تلقائي)"
+    }
+}

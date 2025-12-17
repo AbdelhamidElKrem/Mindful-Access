@@ -1,0 +1,140 @@
+{
+    "appName": {
+        "message": "Taqwa Timekeeper"
+    },
+    "appDesc": {
+        "message": "Protect your time, intentions, and focus."
+    },
+    "intentionCheck": {
+        "message": "Intention Check"
+    },
+    "qBeneficial": {
+        "message": "Are you accessing this for something beneficial?"
+    },
+    "yesBeneficial": {
+        "message": "Yes, it is beneficial"
+    },
+    "noMindless": {
+        "message": "No, mindless browsing"
+    },
+    "workContext": {
+        "message": "Work Context"
+    },
+    "qWorkTime": {
+        "message": "Are you currently in work time?"
+    },
+    "yes": {
+        "message": "Yes"
+    },
+    "no": {
+        "message": "No"
+    },
+    "workRelevance": {
+        "message": "Work Relevance"
+    },
+    "qWorkRelated": {
+        "message": "Is this content related to your work or study?"
+    },
+    "timeLimit": {
+        "message": "Time Limit"
+    },
+    "qHowLong": {
+        "message": "How long do you need access?"
+    },
+    "min1": {
+        "message": "1 min (Test)"
+    },
+    "min5": {
+        "message": "5 min"
+    },
+    "min10": {
+        "message": "10 min"
+    },
+    "min15": {
+        "message": "15 min"
+    },
+    "min30": {
+        "message": "30 min"
+    },
+    "accessDenied": {
+        "message": "Access Denied"
+    },
+    "respectTime": {
+        "message": "Respect your time and intention."
+    },
+    "timeIsTrust": {
+        "message": "\"Time is a trust.\""
+    },
+    "closeTab": {
+        "message": "Close Tab"
+    },
+    "focusActive": {
+        "message": "Focus Mode Active"
+    },
+    "focusMsg": {
+        "message": "You have enabled Focus Mode. No distractions allowed."
+    },
+    "prayerTime": {
+        "message": "Prayer Time"
+    },
+    "prayerMsg": {
+        "message": "This is prayer time. Take a pause."
+    },
+    "continueAnyway": {
+        "message": "Continue anyway (Emergency)"
+    },
+    "focusMode": {
+        "message": "Focus Mode"
+    },
+    "prayerBlocking": {
+        "message": "Prayer Blocking"
+    },
+    "settings": {
+        "message": "Settings"
+    },
+    "blockedWebsites": {
+        "message": "Blocked Websites"
+    },
+    "addWebsite": {
+        "message": "Add Website"
+    },
+    "remove": {
+        "message": "Remove"
+    },
+    "prayerLocation": {
+        "message": "Prayer Times Location"
+    },
+    "locDesc": {
+        "message": "Enter your city and country for accurate prayer times."
+    },
+    "city": {
+        "message": "City"
+    },
+    "country": {
+        "message": "Country"
+    },
+    "save": {
+        "message": "Save"
+    },
+    "locSaved": {
+        "message": "Location saved."
+    },
+    "errorUrl": {
+        "message": "Error: Unknown target URL. Please try opening the site again."
+    },
+    "language": {
+        "message": "Language"
+    },
+    "defaultLang": {
+        "message": "System Default"
+    },
+    "optionsTitle": {
+        "message": "Taqwa Timekeeper Settings"
+    },
+    "options_add_placeholder": {
+        "message": "example.com"
+    },
+    "useGps": {
+        "message": "Use GPS (Auto-Detect)"
+    }
+}
