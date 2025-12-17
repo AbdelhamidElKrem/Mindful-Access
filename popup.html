@@ -6,6 +6,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="appName">Taqwa Timekeeper</title>
     <link rel="stylesheet" href="popup.css">
+    <style>
+        .hidden {
+            display: none !important;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .focus-btn {
+            padding: 10px;
+            background: #eee;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .focus-btn:hover {
+            background: #ddd;
+        }
+
+        #timer-display {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            color: #d35400;
+        }
+
+        #stop-focus-btn {
+            width: 100%;
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,12 +61,27 @@
         <div class="control-group">
             <label class="switch-label">
                 <span data-i18n="focusMode">Focus Mode</span>
-                <input type="checkbox" id="focus-toggle">
-                <span class="slider"></span>
             </label>
+
+            <!-- Timer Selection -->
+            <div id="focus-options">
+                <p data-i18n="selectDuration" style="font-size: 0.9em; color: #666;">Select Duration:</p>
+                <div class="grid">
+                    <button class="focus-btn" data-min="15">15 min</button>
+                    <button class="focus-btn" data-min="30">30 min</button>
+                    <button class="focus-btn" data-min="45">45 min</button>
+                    <button class="focus-btn" data-min="60">60 min</button>
+                </div>
+            </div>
+
+            <!-- Active Timer -->
+            <div id="focus-timer" class="hidden">
+                <div id="timer-display">00:00</div>
+                <button id="stop-focus-btn" data-i18n="stopFocus">Stop Focus</button>
+            </div>
         </div>
 
-        <div class="control-group">
+        <div class="control-group" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px;">
             <label class="switch-label">
                 <span data-i18n="prayerBlocking">Prayer Blocking</span>
                 <input type="checkbox" id="prayer-toggle">

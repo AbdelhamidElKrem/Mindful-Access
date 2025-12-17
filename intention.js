@@ -10,29 +10,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     const intentData = await sendMessage({ action: "getIntent" });
     targetUrl = intentData.url;
 
-    // Setup listeners immediately so buttons work even if we return early
+    // Setup listeners immediately
     setupListeners();
 
     // If we shouldn't proceed
     if (status.focusMode) {
         showStep('focus-msg');
+
+        // Start countdown
+        const countdownEl = document.getElementById('countdown');
+        const updateTimer = () => {
+            chrome.runtime.sendMessage({ action: "checkStatus" }, (res) => {
+                if (res && res.focusMode && res.focusTimeLeft > 0) {
+                    const min = Math.floor(res.focusTimeLeft / 60);
+                    const sec = res.focusTimeLeft % 60;
+                    countdownEl.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+                } else {
+                    countdownEl.textContent = "0:00";
+                }
+            });
+        };
+        updateTimer();
+        setInterval(updateTimer, 1000);
         return;
     }
 
     if (status.isPrayerTime && status.prayerBlocking) {
         showStep('prayer-msg');
-        // We return here, but listener for bypass will handle continuation
         return;
     }
 
     if (!targetUrl) {
-        // Fallback or development testing
         console.warn("No target URL found.");
-        // We might want to just show the first step anyway for testing
     }
-
-    // We proceed to show Step 1 regardless, 
-    // but if targetUrl is missing, grantAccess won't work (alert user).
 
     // Start Flow
     showStep('step-1');
@@ -73,7 +83,7 @@ function setupListeners() {
     });
 
     document.getElementById('q2-no').addEventListener('click', () => {
-        showStep('step-time'); // Not work time, so just go to time limit
+        showStep('step-time');
     });
 
     // Step 3: Work Relevance
@@ -94,15 +104,11 @@ function setupListeners() {
     });
 
     // Close buttons
-    // Use background script to ensure tab closure works reliably
-    // Also try direct close
     const closeAction = () => {
         chrome.runtime.sendMessage({ action: "closeTab" }, () => {
-            // Check lastError to suppress "message port closed" or similar
             if (chrome.runtime.lastError) {
                 console.log("Close tab message error (harmless):", chrome.runtime.lastError.message);
             }
-            // Fallback for popup context or if background removal delayed
             window.close();
         });
     };
@@ -114,6 +120,15 @@ function setupListeners() {
     document.getElementById('prayer-bypass').addEventListener('click', () => {
         showStep('step-1');
     });
+
+    // Focus Emergency Bypass
+    const focusBypassBtn = document.getElementById('focus-bypass');
+    if (focusBypassBtn) {
+        focusBypassBtn.addEventListener('click', () => {
+            // Bypass strict blocking by starting normal intention flow
+            showStep('step-1');
+        });
+    }
 }
 
 async function grantAccess(minutes) {
@@ -124,10 +139,6 @@ async function grantAccess(minutes) {
             duration: minutes
         });
 
-        // Redirect back to the target URL
-        // We need to wait a bit for the rule to apply? 
-        // DNR is fast, but async.
-        // Let's give it 500ms
         setTimeout(() => {
             window.location.href = targetUrl;
         }, 500);
