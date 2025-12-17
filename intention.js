@@ -125,21 +125,16 @@ function setupListeners() {
     document.getElementById('close-tab-prayer').addEventListener('click', closeAction);
 
     document.getElementById('prayer-bypass').addEventListener('click', () => {
-        // Direct bypass for Prayer too? User said "continue ... directly send me to page"
-        // Let's assume for both emergency buttons.
-        // Defaulting to 15 mins for emergency? Or ask? 
-        // "skip questions" implies grant access.
-        // Let's give 5 minutes for emergency to be safe/annoying enough to not abuse?
-        // Or 15. Let's do 15.
-        grantAccess(15);
+        // "No limit access" -> 24 hours (1440 mins)
+        grantAccess(1440);
     });
 
     // Focus Emergency Bypass
     const focusBypassBtn = document.getElementById('focus-bypass');
     if (focusBypassBtn) {
         focusBypassBtn.addEventListener('click', () => {
-            // Direct grant access
-            grantAccess(15);
+            // Direct grant access (Unlimited / 24h)
+            grantAccess(1440);
         });
     }
 }
