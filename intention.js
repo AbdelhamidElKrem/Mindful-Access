@@ -124,18 +124,41 @@ function setupListeners() {
     document.getElementById('close-tab-focus').addEventListener('click', closeAction);
     document.getElementById('close-tab-prayer').addEventListener('click', closeAction);
 
-    document.getElementById('prayer-bypass').addEventListener('click', () => {
-        // "No limit access" -> 24 hours (1440 mins)
-        grantAccess(1440);
-    });
+    // Helper to check if current site is in the Blocked List
+    const checkIsBlockedSite = async () => {
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['blockedSites'], (data) => {
+                const list = data.blockedSites || [];
+                try {
+                    const hostname = new URL(targetUrl).hostname;
+                    // Check if hostname contains any of the blocked domains
+                    // e.g. "www.youtube.com" contains "youtube.com"
+                    const isBlocked = list.some(site => hostname.includes(site));
+                    resolve(isBlocked);
+                } catch (e) {
+                    resolve(false);
+                }
+            });
+        });
+    };
+
+    const handleBypass = async () => {
+        const isBlocked = await checkIsBlockedSite();
+        if (isBlocked) {
+            // It's a "DNS" blocked site -> Force Questions
+            showStep('step-1');
+        } else {
+            // It's just a random site blocked by Focus Mode -> Direct Unlimited Access
+            grantAccess(1440);
+        }
+    };
+
+    document.getElementById('prayer-bypass').addEventListener('click', handleBypass);
 
     // Focus Emergency Bypass
     const focusBypassBtn = document.getElementById('focus-bypass');
     if (focusBypassBtn) {
-        focusBypassBtn.addEventListener('click', () => {
-            // Direct grant access (Unlimited / 24h)
-            grantAccess(1440);
-        });
+        focusBypassBtn.addEventListener('click', handleBypass);
     }
 }
 
