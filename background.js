@@ -262,6 +262,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         stopFocusMode();
     } else if (alarm.name === "prayerTicker") {
         checkPrayerBlockingTick();
+        checkPrayerNotification();
     } else if (alarm.name.startsWith("block|")) {
         const domain = alarm.name.split("|")[1];
         const ruleId = Math.hash(domain);
@@ -282,6 +283,45 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         });
     }
 });
+
+// Notification Logic
+let lastNotifiedPrayer = null;
+
+function checkPrayerNotification() {
+    if (!prayerTimes) return;
+
+    const now = new Date();
+    const headers = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+    for (const name of headers) {
+        const timeStr = prayerTimes[name]; // "HH:MM"
+        if (!timeStr) continue;
+
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const prayerDate = new Date();
+        prayerDate.setHours(hours, minutes, 0, 0);
+
+        const diffMs = prayerDate - now;
+        const diffMins = diffMs / 60000;
+
+        // Notify if 5 minutes remaining (range 4-6 to be safe with ticker)
+        if (diffMins > 4 && diffMins <= 6) {
+            const key = `${name}-${new Date().toDateString()}`;
+            if (lastNotifiedPrayer !== key) {
+                console.log(`Sending notification for ${name}`);
+
+                chrome.notifications.create({
+                    type: 'basic',
+                    iconUrl: 'icons/icon128.png',
+                    title: 'Prayer Time Approaching',
+                    message: `${name} will start in 5 minutes. Prepare yourself.`
+                });
+
+                lastNotifiedPrayer = key;
+            }
+        }
+    }
+}
 
 function checkPrayerBlockingTick() {
     chrome.storage.local.get(['prayerBlocking'], (data) => {

@@ -12,7 +12,8 @@
         "tabs",
         "activeTab",
         "webNavigation",
-        "geolocation"
+        "geolocation",
+        "notifications"
     ],
     "host_permissions": [
         "<all_urls>",

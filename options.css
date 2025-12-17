@@ -1,0 +1,219 @@
+/* Premium Options CSS */
+:root {
+    --primary-color: #0f3d3e;
+    --accent-color: #e2b714;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #2d3436;
+    --text-muted: #636e72;
+    --border-color: #e0e0e0;
+    --danger-color: #e17055;
+    --success-color: #00b894;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 700px;
+    width: 100%;
+    margin: 2rem;
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    padding: 2.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header */
+header {
+    margin-bottom: 2.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+h1 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Sections */
+.section {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    border-color: #bdc3c7;
+}
+
+/* Inputs & Selects */
+select,
+input[type="text"] {
+    padding: 10px 15px;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--text-color);
+    width: 100%;
+    box-sizing: border-box;
+    transition: border 0.2s;
+}
+
+select:focus,
+input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+}
+
+.primary {
+    background-color: var(--primary-color);
+}
+
+.primary:hover {
+    background-color: #145253;
+    transform: translateY(-1px);
+}
+
+.accent {
+    background-color: #3498db;
+}
+
+.accent:hover {
+    background-color: #2980b9;
+}
+
+.btn-small {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+}
+
+/* Flex Groups */
+.flex-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.flex-grow {
+    flex: 1;
+}
+
+/* List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f1f2f6;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: background 0.2s;
+}
+
+li:hover {
+    background: #ecf0f1;
+}
+
+li span {
+    font-weight: 500;
+}
+
+button.delete {
+    background: var(--danger-color);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+
+button.delete:hover {
+    background: #c0392b;
+}
+
+/* Status Text */
+.status {
+    font-size: 0.9rem;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Logo placeholder if image fails */
+.logo-box {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--accent-color);
+    font-weight: bold;
+}
