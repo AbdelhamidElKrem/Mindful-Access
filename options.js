@@ -114,13 +114,19 @@ function saveLanguage() {
 }
 
 function loadLocation() {
-    chrome.storage.local.get(['city', 'country', 'latitude', 'longitude', 'useGps'], (data) => {
+    chrome.storage.local.get(['city', 'country', 'latitude', 'longitude', 'useGps', 'prayerTimes'], (data) => {
         if (data.city) document.getElementById('city').value = data.city;
         if (data.country) document.getElementById('country').value = data.country;
 
         const status = document.getElementById('loc-status');
         if (data.useGps && data.latitude) {
-            status.textContent = `Using GPS: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
+            status.textContent = `GPS Active: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
+            status.style.color = 'var(--success-color)'; // Or primary
+        }
+
+        // If we have prayer times, show the table immediately
+        if (data.prayerTimes) {
+            displayPrayerTable(data.prayerTimes);
         }
     });
 }
@@ -128,19 +134,42 @@ function loadLocation() {
 function saveLocation() {
     const city = document.getElementById('city').value.trim();
     const country = document.getElementById('country').value.trim();
+    const status = document.getElementById('loc-status');
 
+    if (!city || !country) {
+        status.textContent = "Please enter both City and Country.";
+        status.style.color = '#d63031';
+        return;
+    }
+
+    status.textContent = "Saving...";
+
+    // Reverse Geocoding or just API fetch would happen in background usually,
+    // but here we just notify background to update.
     chrome.storage.local.set({ city, country, useGps: false }, () => {
-        const status = document.getElementById('loc-status');
-        status.textContent = chrome.i18n.getMessage("locSaved") || "Location saved.";
-        setTimeout(() => status.textContent = '', 2000);
+        chrome.runtime.sendMessage({ action: "updatePrayerTimes" }, (response) => {
+            // We can listen for the storage change or just wait a bit, 
+            // but let's try to fetch immediately for UI feedback if possible?
+            // Actually better to wait for background.
+            // Simulating 'Saved' then reloading times.
+            status.textContent = "Location Saved. Updating times...";
+            status.style.color = 'var(--primary-color)';
 
-        chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+            // Give background a moment to fetch
+            setTimeout(() => {
+                chrome.storage.local.get(['prayerTimes'], (d) => {
+                    if (d.prayerTimes) displayPrayerTable(d.prayerTimes);
+                    status.textContent = "Times Updated.";
+                });
+            }, 2000);
+        });
     });
 }
 
 function useGps() {
     const status = document.getElementById('loc-status');
     status.textContent = "Locating...";
+    status.style.color = 'var(--accent-color)';
 
     if (!navigator.geolocation) {
         status.textContent = "Geolocation not supported";
@@ -156,13 +185,52 @@ function useGps() {
             longitude: lng,
             useGps: true
         }, () => {
-            status.textContent = `GPS Connected: ${lat.toFixed(2)}, ${lng.toFixed(2)}`;
+            status.textContent = `GPS found. Fetching times...`;
+
+            // Trigger background update
             chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+
+            // Poll for result
+            setTimeout(() => {
+                chrome.storage.local.get(['prayerTimes', 'city', 'country'], (d) => {
+                    if (d.city) document.getElementById('city').value = d.city; // If background reverse geocoded
+                    if (d.country) document.getElementById('country').value = d.country;
+                    if (d.prayerTimes) {
+                        displayPrayerTable(d.prayerTimes);
+                        status.textContent = "Prayer Times Updated Successfully.";
+                        status.style.color = 'var(--primary-color)';
+                    }
+                });
+            }, 2500);
         });
     }, error => {
         status.textContent = "GPS Error: " + error.message;
+        status.style.color = '#d63031';
         console.error(error);
     });
+}
+
+function displayPrayerTable(timings) {
+    const container = document.getElementById('prayer-table-container');
+    const tbody = document.getElementById('prayer-table-body');
+
+    if (!timings) return;
+
+    // Simple check: is timings object valid?
+    if (!timings.Fajr) return;
+
+    tbody.innerHTML = `
+        <tr>
+            <td>${timings.Fajr}</td>
+            <td>${timings.Dhuhr}</td>
+            <td>${timings.Asr}</td>
+            <td>${timings.Maghrib}</td>
+            <td>${timings.Isha}</td>
+        </tr>
+    `;
+
+    container.style.display = 'block';
+    container.classList.add('fade-in'); // simple class if we want animation
 }
 
 // Ensure hash function matches background.js

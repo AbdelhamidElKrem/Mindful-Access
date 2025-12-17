@@ -1,72 +1,78 @@
-/* Premium Intention CSS */
+/* Premium Intention CSS - Matched to Visuals */
 :root {
-    --primary-color: #0f3d3e;
-    /* Deep Emerald */
-    --accent-color: #e2b714;
-    /* Soft Gold */
-    --bg-color: #f0f4f3;
-    /* Light Greenish Gray */
-    --text-color: #2d3436;
-    --text-muted: #636e72;
-    --glass-bg: rgba(255, 255, 255, 0.85);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --primary-color: #0b3d2e;
+    /* Deep Forest/Emerald Green */
+    --accent-color: #d4af37;
+    /* Metallic Gold */
+    --text-light: #ffffff;
+    --text-dim: #cbd5e0;
+    --bg-gradient: linear-gradient(135deg, #0b3d2e 0%, #145240 100%);
+    --card-bg: rgba(11, 40, 30, 0.95);
+    --glass-border: 1px solid var(--accent-color);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: radial-gradient(circle at top right, #e8f5e9, #f0f4f3);
-    color: var(--text-color);
+    font-family: 'Georgia', 'Segoe UI', serif;
+    /* Serif as seen in image */
+    background: #f0f4f3;
+    /* Neutral background behind the card/frame */
+    /* Or if user wants the glass effect over the site, keep background transparent/blur? 
+       The image shows a laptop with the card OVER the site. 
+       So body background should probably be transclucent or a blur. */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    color: var(--text-light);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    overflow: hidden;
 }
 
-/* Glassmorphism Card */
+/* The Main Card */
 .container {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
+    background: var(--bg-gradient);
+    border: 2px solid var(--accent-color);
+    /* The "Bounders" */
     padding: 3rem;
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2), var(--shadow);
+    max-width: 480px;
     width: 90%;
     text-align: center;
     position: relative;
-    animation: fadeIn 0.6s ease-out;
+    animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeIn {
+@keyframes zoomIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: scale(0.9);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
     }
 }
 
 /* Typography */
 h2 {
+    font-family: 'Georgia', serif;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--accent-color);
     margin-bottom: 0.5rem;
-    font-size: 1.8rem;
-    letter-spacing: -0.5px;
+    font-size: 2.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 p {
+    font-family: 'Segoe UI', sans-serif;
     font-size: 1.1rem;
-    color: var(--text-muted);
+    color: var(--text-dim);
     line-height: 1.6;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
 /* Animations for Steps */
@@ -93,44 +99,43 @@ p {
 
 /* Buttons */
 .btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
+    padding: 14px 28px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: 0.3px;
-    position: relative;
-    overflow: hidden;
+    font-weight: 700;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 100%;
+    display: block;
+    margin-bottom: 12px;
 }
 
-.btn:active {
-    transform: scale(0.98);
-}
-
+/* Primary Action (Proceed) - GOLD */
 .primary {
-    background: var(--primary-color);
-    color: #fff;
-    box-shadow: 0 4px 15px rgba(15, 61, 62, 0.2);
+    background: linear-gradient(to bottom, #deb841, #d4af37);
+    color: #0b3d2e;
+    border: none;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 .primary:hover {
-    background: #145253;
+    background: linear-gradient(to bottom, #eac14d, #deb841);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(15, 61, 62, 0.3);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
 }
 
+/* Secondary Action (Close) - DARK GREEN with GOLD BORDER */
 .secondary {
     background: transparent;
-    border: 1px solid #b2bec3;
-    color: var(--text-muted);
+    border: 2px solid var(--accent-color);
+    color: var(--text-light);
 }
 
 .secondary:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    background: rgba(15, 61, 62, 0.05);
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-color);
 }
 
 /* Time Buttons Grid */
@@ -142,26 +147,25 @@ p {
 }
 
 .time-btn {
-    background: #fff;
-    border: 1px solid #dfe6e9;
-    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: var(--text-light);
     padding: 15px;
 }
 
 .time-btn:hover {
     border-color: var(--accent-color);
-    background: #fffdf5;
-    /* Tint of gold */
-    color: var(--primary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    background: rgba(212, 175, 55, 0.1);
+    color: var(--accent-color);
 }
 
-/* Custom Input */
+/* Inputs */
 input[type="number"] {
-    padding: 10px 15px;
-    border: 1px solid #dfe6e9;
-    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 10px;
+    border-radius: 6px;
     font-size: 1rem;
     width: 70px;
     text-align: center;
@@ -171,7 +175,7 @@ input[type="number"] {
 }
 
 input[type="number"]:focus {
-    border-color: var(--primary-color);
+    border-color: var(--accent-color);
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -184,28 +188,28 @@ input[type=number]::-webkit-outer-spin-button {
 .btn-text {
     background: none;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-dim);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     margin-top: 1rem;
     padding: 5px;
 }
 
 .btn-text:hover {
-    color: var(--primary-color);
+    color: var(--accent-color);
     text-decoration: underline;
 }
 
-/* Countdown */
 #countdown {
     font-family: 'Courier New', monospace;
-    /* Or a tabular numeric font */
-    font-variant-numeric: tabular-nums;
     color: var(--accent-color);
-    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.1);
+    font-size: 3rem;
+    margin: 1rem 0;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+    font-variant-numeric: tabular-nums;
 }
 
-/* Utility */
+/* Actions Wrapper */
 .actions {
     display: flex;
     flex-direction: column;
