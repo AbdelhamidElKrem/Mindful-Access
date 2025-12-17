@@ -206,7 +206,8 @@ function updatePrayerTimes() {
                 if (json.code === 200) {
                     prayerTimes = json.data.timings;
                     console.log("Prayer times updated:", prayerTimes);
-                    chrome.storage.local.set({ cachedPrayerTimes: prayerTimes, lastFetch: dateStr });
+                    // Save to 'prayerTimes' to match options.js expectation
+                    chrome.storage.local.set({ prayerTimes: prayerTimes, lastFetch: dateStr });
                 }
             })
             .catch(err => console.error("Error fetching prayer times:", err));
@@ -239,12 +240,12 @@ function isDuringPrayerTime() {
 }
 
 // Initial fetch or load
-chrome.storage.local.get(['cachedPrayerTimes', 'lastFetch'], (data) => {
+chrome.storage.local.get(['prayerTimes', 'lastFetch'], (data) => {
     const today = new Date();
     const dateStr = `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
 
-    if (data.cachedPrayerTimes && data.lastFetch === dateStr) {
-        prayerTimes = data.cachedPrayerTimes;
+    if (data.prayerTimes && data.lastFetch === dateStr) {
+        prayerTimes = data.prayerTimes;
     } else {
         updatePrayerTimes();
     }

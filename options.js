@@ -9,7 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('save-loc-btn').addEventListener('click', saveLocation);
     document.getElementById('gps-btn').addEventListener('click', useGps);
     document.getElementById('lang-select').addEventListener('change', saveLanguage);
+    document.getElementById('prayer-blocking-toggle').addEventListener('change', togglePrayerBlocking);
+
+    // Load Prayer Blocking State
+    chrome.storage.local.get(['prayerBlocking'], (data) => {
+        document.getElementById('prayer-blocking-toggle').checked = data.prayerBlocking !== false;
+    });
 });
+
+function togglePrayerBlocking(e) {
+    chrome.storage.local.set({ prayerBlocking: e.target.checked });
+}
 
 function loadSites() {
     chrome.storage.local.get(['blockedSites'], (data) => {
@@ -115,8 +125,11 @@ function saveLanguage() {
 
 function loadLocation() {
     chrome.storage.local.get(['city', 'country', 'latitude', 'longitude', 'useGps', 'prayerTimes'], (data) => {
-        if (data.city) document.getElementById('city').value = data.city;
-        if (data.country) document.getElementById('country').value = data.country;
+        const cityInput = document.getElementById('city');
+        const countryInput = document.getElementById('country');
+
+        if (cityInput && data.city) cityInput.value = data.city;
+        if (countryInput && data.country) countryInput.value = data.country;
 
         const status = document.getElementById('loc-status');
         if (data.useGps && data.latitude) {
@@ -132,9 +145,18 @@ function loadLocation() {
 }
 
 function saveLocation() {
-    const city = document.getElementById('city').value.trim();
-    const country = document.getElementById('country').value.trim();
+    const cityInput = document.getElementById('city');
+    const countryInput = document.getElementById('country');
     const status = document.getElementById('loc-status');
+
+    if (!cityInput || !countryInput) {
+        // If inputs are hidden/removed, we can't save manual location this way
+        status.textContent = "Manual entry invalid or hidden.";
+        return;
+    }
+
+    const city = cityInput.value.trim();
+    const country = countryInput.value.trim();
 
     if (!city || !country) {
         status.textContent = "Please enter both City and Country.";
