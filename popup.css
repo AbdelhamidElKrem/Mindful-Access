@@ -180,6 +180,87 @@ main {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Grid Layout for Buttons */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* 4 in a row as they are small numbers */
+    gap: 8px;
+    margin: 10px 0;
+}
+
+/* Focus Buttons */
+.focus-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    /* Slightly rounded */
+    padding: 8px 0;
+    color: #0b3d2e;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.focus-btn:hover {
+    background: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.focus-btn.active {
+    background: var(--accent-color);
+    color: #0b3d2e;
+    border-color: var(--accent-color);
+}
+
+/* Toggle Switch CSS */
+.switch-label {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.switch-content {
+    /* Container for text checks if needed */
+}
+
+/* The Switch Container */
+input[type="checkbox"]+.slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    transition: .4s;
+    display: inline-block;
+}
+
+input[type="checkbox"]+.slider:before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: .4s;
+}
+
+input[type="checkbox"]:checked+.slider {
+    background-color: var(--accent-color);
+}
+
+input[type="checkbox"]:checked+.slider:before {
+    transform: translateX(20px);
+}
+
 .hidden {
     display: none !important;
 }

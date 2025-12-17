@@ -123,68 +123,52 @@ function saveLanguage() {
     });
 }
 
+// options.js
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadSites();
+    loadLocation();
+    loadLanguage();
+
+    document.getElementById('add-btn').addEventListener('click', addSite);
+    // Manual save button removed
+    document.getElementById('gps-btn').addEventListener('click', useGps);
+    document.getElementById('lang-select').addEventListener('change', saveLanguage);
+    document.getElementById('prayer-blocking-toggle').addEventListener('change', togglePrayerBlocking);
+
+    // Load Prayer Blocking State
+    chrome.storage.local.get(['prayerBlocking'], (data) => {
+        const toggle = document.getElementById('prayer-blocking-toggle');
+        if (toggle) {
+            toggle.checked = data.prayerBlocking !== false;
+        }
+    });
+});
+
+function togglePrayerBlocking(e) {
+    chrome.storage.local.set({ prayerBlocking: e.target.checked });
+}
+
 function loadLocation() {
     chrome.storage.local.get(['city', 'country', 'latitude', 'longitude', 'useGps', 'prayerTimes'], (data) => {
-        const cityInput = document.getElementById('city');
-        const countryInput = document.getElementById('country');
-
-        if (cityInput && data.city) cityInput.value = data.city;
-        if (countryInput && data.country) countryInput.value = data.country;
-
         const status = document.getElementById('loc-status');
+        /*
         if (data.useGps && data.latitude) {
-            status.textContent = `GPS Active: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
-            status.style.color = 'var(--success-color)'; // Or primary
+            status.textContent = `GPS Active`;
+             status.style.color = 'var(--success-color)';
         }
+        */
 
         // If we have prayer times, show the table immediately
         if (data.prayerTimes) {
-            displayPrayerTable(data.prayerTimes);
+            let locString = "";
+            if (data.city && data.country) {
+                locString = `${data.city}, ${data.country}`;
+            } else if (data.latitude) {
+                locString = `GPS: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
+            }
+            displayPrayerTable(data.prayerTimes, locString);
         }
-    });
-}
-
-function saveLocation() {
-    const cityInput = document.getElementById('city');
-    const countryInput = document.getElementById('country');
-    const status = document.getElementById('loc-status');
-
-    if (!cityInput || !countryInput) {
-        // If inputs are hidden/removed, we can't save manual location this way
-        status.textContent = "Manual entry invalid or hidden.";
-        return;
-    }
-
-    const city = cityInput.value.trim();
-    const country = countryInput.value.trim();
-
-    if (!city || !country) {
-        status.textContent = "Please enter both City and Country.";
-        status.style.color = '#d63031';
-        return;
-    }
-
-    status.textContent = "Saving...";
-
-    // Reverse Geocoding or just API fetch would happen in background usually,
-    // but here we just notify background to update.
-    chrome.storage.local.set({ city, country, useGps: false }, () => {
-        chrome.runtime.sendMessage({ action: "updatePrayerTimes" }, (response) => {
-            // We can listen for the storage change or just wait a bit, 
-            // but let's try to fetch immediately for UI feedback if possible?
-            // Actually better to wait for background.
-            // Simulating 'Saved' then reloading times.
-            status.textContent = "Location Saved. Updating times...";
-            status.style.color = 'var(--primary-color)';
-
-            // Give background a moment to fetch
-            setTimeout(() => {
-                chrome.storage.local.get(['prayerTimes'], (d) => {
-                    if (d.prayerTimes) displayPrayerTable(d.prayerTimes);
-                    status.textContent = "Times Updated.";
-                });
-            }, 2000);
-        });
     });
 }
 
@@ -202,29 +186,55 @@ function useGps() {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        chrome.storage.local.set({
-            latitude: lat,
-            longitude: lng,
-            useGps: true
-        }, () => {
-            status.textContent = `GPS found. Fetching times...`;
+        status.textContent = "GPS Found. detecting location...";
 
-            // Trigger background update
-            chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+        // Reverse Geocode to get name for the Table Display
+        fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
+            .then(res => res.json())
+            .then(data => {
+                const city = data.city || data.locality || "";
+                const country = data.countryName || "";
 
-            // Poll for result
-            setTimeout(() => {
-                chrome.storage.local.get(['prayerTimes', 'city', 'country'], (d) => {
-                    if (d.city) document.getElementById('city').value = d.city; // If background reverse geocoded
-                    if (d.country) document.getElementById('country').value = d.country;
-                    if (d.prayerTimes) {
-                        displayPrayerTable(d.prayerTimes);
-                        status.textContent = "Prayer Times Updated Successfully.";
-                        status.style.color = 'var(--primary-color)';
-                    }
+                // Save to storage
+                chrome.storage.local.set({
+                    latitude: lat,
+                    longitude: lng,
+                    city: city,
+                    country: country,
+                    useGps: true
+                }, () => {
+                    status.textContent = "Location Found. Updating times...";
+
+                    // Trigger background update
+                    chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+
+                    // Poll for result
+                    setTimeout(() => {
+                        chrome.storage.local.get(['prayerTimes', 'city', 'country'], (d) => {
+                            if (d.prayerTimes) {
+                                const locStr = (d.city && d.country) ? `${d.city}, ${d.country}` : "GPS Location";
+                                displayPrayerTable(d.prayerTimes, locStr);
+                                status.textContent = ""; // Clear status as table shows info
+                            }
+                        });
+                    }, 2500);
                 });
-            }, 2500);
-        });
+            })
+            .catch(e => {
+                console.error("Geocoding failed", e);
+                status.textContent = "Using GPS Coordinates.";
+                chrome.storage.local.set({ latitude: lat, longitude: lng, useGps: true }, () => {
+                    chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+                    // Poll
+                    setTimeout(() => {
+                        chrome.storage.local.get(['prayerTimes'], (d) => {
+                            if (d.prayerTimes) displayPrayerTable(d.prayerTimes, "GPS Location");
+                            status.textContent = "";
+                        });
+                    }, 2000);
+                });
+            });
+
     }, error => {
         status.textContent = "GPS Error: " + error.message;
         status.style.color = '#d63031';
@@ -232,14 +242,16 @@ function useGps() {
     });
 }
 
-function displayPrayerTable(timings) {
+function displayPrayerTable(timings, locationName) {
     const container = document.getElementById('prayer-table-container');
     const tbody = document.getElementById('prayer-table-body');
+    const locDisplay = document.getElementById('location-display');
 
-    if (!timings) return;
+    if (!timings || !timings.Fajr) return;
 
-    // Simple check: is timings object valid?
-    if (!timings.Fajr) return;
+    if (locationName && locDisplay) {
+        locDisplay.textContent = locationName;
+    }
 
     tbody.innerHTML = `
         <tr>
@@ -252,7 +264,7 @@ function displayPrayerTable(timings) {
     `;
 
     container.style.display = 'block';
-    container.classList.add('fade-in'); // simple class if we want animation
+    container.classList.add('fade-in');
 }
 
 // Ensure hash function matches background.js
