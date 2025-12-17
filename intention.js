@@ -103,12 +103,19 @@ function setupListeners() {
         });
     });
 
+    // Custom Time
+    document.getElementById('custom-time-btn').addEventListener('click', async () => {
+        const input = document.getElementById('custom-time');
+        const minutes = parseInt(input.value);
+        if (minutes > 0) {
+            await grantAccess(minutes);
+        }
+    });
+
     // Close buttons
     const closeAction = () => {
         chrome.runtime.sendMessage({ action: "closeTab" }, () => {
-            if (chrome.runtime.lastError) {
-                console.log("Close tab message error (harmless):", chrome.runtime.lastError.message);
-            }
+            if (chrome.runtime.lastError) { /* ignore */ }
             window.close();
         });
     };
@@ -118,15 +125,21 @@ function setupListeners() {
     document.getElementById('close-tab-prayer').addEventListener('click', closeAction);
 
     document.getElementById('prayer-bypass').addEventListener('click', () => {
-        showStep('step-1');
+        // Direct bypass for Prayer too? User said "continue ... directly send me to page"
+        // Let's assume for both emergency buttons.
+        // Defaulting to 15 mins for emergency? Or ask? 
+        // "skip questions" implies grant access.
+        // Let's give 5 minutes for emergency to be safe/annoying enough to not abuse?
+        // Or 15. Let's do 15.
+        grantAccess(15);
     });
 
     // Focus Emergency Bypass
     const focusBypassBtn = document.getElementById('focus-bypass');
     if (focusBypassBtn) {
         focusBypassBtn.addEventListener('click', () => {
-            // Bypass strict blocking by starting normal intention flow
-            showStep('step-1');
+            // Direct grant access
+            grantAccess(15);
         });
     }
 }

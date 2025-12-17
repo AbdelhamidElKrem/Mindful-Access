@@ -142,5 +142,8 @@
     },
     "stopFocus": {
         "message": "Stop Focus"
+    },
+    "go": {
+        "message": "Go"
     }
 }

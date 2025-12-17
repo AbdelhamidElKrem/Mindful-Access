@@ -39,6 +39,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+    // Custom Focus Time
+    document.getElementById('custom-focus-btn').addEventListener('click', () => {
+        const input = document.getElementById('custom-focus-time');
+        const min = parseInt(input.value);
+        if (min > 0) {
+            chrome.runtime.sendMessage({ action: "startFocusMode", duration: min }, () => {
+                updateUI();
+            });
+        }
+    });
 });
 
 function updateUI() {

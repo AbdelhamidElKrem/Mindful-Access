@@ -46,12 +46,19 @@
             <h2 data-i18n="timeLimit">Time Limit</h2>
             <p data-i18n="qHowLong">How long do you need access?</p>
             <div class="actions grid">
-                <button class="btn time-btn" data-time="1" data-i18n="min1">1 min (Test)</button>
+                <!-- <button class="btn time-btn" data-time="1" data-i18n="min1">1 min (Test)</button> -->
                 <button class="btn time-btn" data-time="5" data-i18n="min5">5 min</button>
                 <button class="btn time-btn" data-time="10" data-i18n="min10">10 min</button>
                 <button class="btn time-btn" data-time="15" data-i18n="min15">15 min</button>
+                <button class="btn time-btn" data-time="30" data-i18n="min30">30 min</button>
             </div>
-            <!-- Custom time input could go here -->
+
+            <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; align-items: center;">
+                <input type="number" id="custom-time" min="1" max="120"
+                    style="padding: 8px; width: 60px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Min">
+                <button id="custom-time-btn" class="btn btn-text"
+                    style="padding: 8px 12px; background: #ddd; color: #333;" data-i18n="go">Go</button>
+            </div>
         </div>
 
         <div id="blocked-msg" class="step hidden">
