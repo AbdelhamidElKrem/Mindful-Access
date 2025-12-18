@@ -55,3 +55,12 @@ A Manifest V3 Chrome Extension designed to promote digital wellbeing and religio
 
 - **Prayer Times**: Powered by [Aladhan API](https://aladhan.com/).
 - **Reverse Geocoding**: Powered by [BigDataCloud](https://www.bigdatacloud.com/).
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests, report issues, and our code of conduct.
+
