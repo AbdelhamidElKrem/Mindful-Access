@@ -214,7 +214,10 @@ function updatePrayerTimes() {
     });
 }
 
-function isDuringPrayerTime() {
+// Helper to get duration
+// We'll read it in checkPrayerBlockingTick
+
+function isDuringPrayerTime(customDuration = 20) {
     if (!prayerTimes) return false;
 
     const now = new Date();
@@ -231,8 +234,8 @@ function isDuringPrayerTime() {
         const diffMs = now - prayerDate;
         const diffMins = diffMs / 60000;
 
-        // Active if 0 <= diff <= 20
-        if (diffMins >= 0 && diffMins <= 20) {
+        // Active if 0 <= diff <= customDuration
+        if (diffMins >= 0 && diffMins <= customDuration) {
             return name;
         }
     }
@@ -325,13 +328,15 @@ function checkPrayerNotification() {
 }
 
 function checkPrayerBlockingTick() {
-    chrome.storage.local.get(['prayerBlocking'], (data) => {
+    chrome.storage.local.get(['prayerBlocking', 'prayerDuration'], (data) => {
         if (!data.prayerBlocking) {
             chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [RULE_ID_PRAYER] });
             return;
         }
 
-        const prayerName = isDuringPrayerTime();
+        const duration = parseInt(data.prayerDuration) || 20;
+        const prayerName = isDuringPrayerTime(duration);
+
         if (prayerName) {
             // Ensure rule is ADDED
             chrome.declarativeNetRequest.getDynamicRules(oldRules => {

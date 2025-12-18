@@ -145,5 +145,38 @@
     },
     "go": {
         "message": "Go"
+    },
+    "blockingDuration": {
+        "message": "Blocking Duration (mins)"
+    },
+    "manualCorrection": {
+        "message": "Manual Correction"
+    },
+    "saveManualLoc": {
+        "message": "Save Manual Location"
+    },
+    "enterCityCountry": {
+        "message": "Please enter both City and Country."
+    },
+    "locating": {
+        "message": "Locating..."
+    },
+    "notSupported": {
+        "message": "Geolocation not supported"
+    },
+    "gpsFound": {
+        "message": "GPS Found. Detecting location..."
+    },
+    "locFoundUpdating": {
+        "message": "Location Found. Updating times..."
+    },
+    "updatedViaGps": {
+        "message": "Updated via GPS"
+    },
+    "usingGpsCoords": {
+        "message": "Using GPS Coordinates."
+    },
+    "errorUpdating": {
+        "message": "Error updating times. Check city name."
     }
 }

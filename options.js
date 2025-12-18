@@ -5,21 +5,76 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLocation();
     loadLanguage();
 
+    // Event Listeners
     document.getElementById('add-btn').addEventListener('click', addSite);
     document.getElementById('save-loc-btn').addEventListener('click', saveLocation);
     document.getElementById('gps-btn').addEventListener('click', useGps);
     document.getElementById('lang-select').addEventListener('change', saveLanguage);
     document.getElementById('prayer-blocking-toggle').addEventListener('change', togglePrayerBlocking);
+    const durationInput = document.getElementById('prayer-duration');
+    if (durationInput) {
+        durationInput.addEventListener('change', saveDuration);
+    }
 
-    // Load Prayer Blocking State
-    chrome.storage.local.get(['prayerBlocking'], (data) => {
-        document.getElementById('prayer-blocking-toggle').checked = data.prayerBlocking !== false;
+    // Load Prayer Blocking State & Duration
+    chrome.storage.local.get(['prayerBlocking', 'prayerDuration'], (data) => {
+        const toggle = document.getElementById('prayer-blocking-toggle');
+
+        if (toggle) {
+            toggle.checked = data.prayerBlocking !== false;
+        }
+        if (durationInput) {
+            durationInput.value = data.prayerDuration || 20;
+        }
     });
+
+    // Handle delete buttons for existing sites (event delegation handled in loadSites, 
+    // but we can also use delegation on the list itself if we wanted, but loadSites attaches listeners currently)
 });
+
+// --- Core Logic ---
 
 function togglePrayerBlocking(e) {
     chrome.storage.local.set({ prayerBlocking: e.target.checked });
 }
+
+function saveDuration(e) {
+    let val = parseInt(e.target.value);
+    if (val < 1) val = 1;
+    if (val > 60) val = 60;
+    chrome.storage.local.set({ prayerDuration: val });
+}
+
+// --- Localization ---
+
+function loadLanguage() {
+    chrome.storage.local.get(['preferredLanguage'], (data) => {
+        const lang = data.preferredLanguage || 'default';
+        const select = document.getElementById('lang-select');
+        select.value = lang;
+
+        // Apply RTL/Arabic logic
+        if (lang === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+            document.body.classList.add('is-arabic');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', 'en');
+            document.body.classList.remove('is-arabic');
+        }
+    });
+}
+
+function saveLanguage() {
+    const lang = document.getElementById('lang-select').value;
+    chrome.storage.local.set({ preferredLanguage: lang }, () => {
+        // Reload page to apply changes
+        window.location.reload();
+    });
+}
+
+// --- Blocked Sites Logic ---
 
 function loadSites() {
     chrome.storage.local.get(['blockedSites'], (data) => {
@@ -106,48 +161,7 @@ function removeBlockRule(domain) {
     });
 }
 
-// New Settings Logic
-
-function loadLanguage() {
-    chrome.storage.local.get(['preferredLanguage'], (data) => {
-        const select = document.getElementById('lang-select');
-        select.value = data.preferredLanguage || 'default';
-    });
-}
-
-function saveLanguage() {
-    const lang = document.getElementById('lang-select').value;
-    chrome.storage.local.set({ preferredLanguage: lang }, () => {
-        // Reload page to apply changes
-        window.location.reload();
-    });
-}
-
-// options.js
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadSites();
-    loadLocation();
-    loadLanguage();
-
-    document.getElementById('add-btn').addEventListener('click', addSite);
-    document.getElementById('save-loc-btn').addEventListener('click', saveLocation);
-    document.getElementById('gps-btn').addEventListener('click', useGps);
-    document.getElementById('lang-select').addEventListener('change', saveLanguage);
-    document.getElementById('prayer-blocking-toggle').addEventListener('change', togglePrayerBlocking);
-
-    // Load Prayer Blocking State
-    chrome.storage.local.get(['prayerBlocking'], (data) => {
-        const toggle = document.getElementById('prayer-blocking-toggle');
-        if (toggle) {
-            toggle.checked = data.prayerBlocking !== false;
-        }
-    });
-});
-
-function togglePrayerBlocking(e) {
-    chrome.storage.local.set({ prayerBlocking: e.target.checked });
-}
+// --- Location & Prayer Times Logic ---
 
 function loadLocation() {
     chrome.storage.local.get(['city', 'country', 'latitude', 'longitude', 'useGps', 'prayerTimes'], (data) => {
@@ -246,7 +260,7 @@ function useGps() {
                 chrome.storage.local.set({
                     latitude: lat,
                     longitude: lng,
-                    city: city, // Still save suggested city
+                    city: city,
                     country: country,
                     useGps: true
                 }, () => {
@@ -315,7 +329,8 @@ function displayPrayerTable(timings, locationName) {
     container.classList.add('fade-in');
 }
 
-// Ensure hash function matches background.js
+// Helpers
+
 Math.hash = function (s) {
     let h = 0;
     for (let i = 0; i < s.length; i++)

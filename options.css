@@ -349,4 +349,39 @@ input:checked+.slider:before {
 .manual-location-group h3 {
     font-weight: 500;
     opacity: 0.9;
+}/* RTL Support */
+html[dir="rtl"] body {
+    direction: rtl;
+    text-align: right;
+}
+
+html[dir="rtl"] .flex-row {
+    flex-direction: row-reverse;
+    /* Or just row if direction is rtl? usually row works with rtl automatically, but gap might need checking */
+}
+
+/* Invert Table for Arabic */
+/* The user requested "if arabic start the table from the inverse" */
+/* Standard RTL table puts first column on Right. */
+/* If the user wants Fajr (Time 1) on the Right, that IS standard RTL behavior if the columns are ordered in HTML. */
+/* However, if they want to flip the order of columns specifically */
+
+body.is-arabic .prayer-table-container table thead tr,
+body.is-arabic .prayer-table-container table tbody tr {
+    /* If we use flex on TR, we can reverse it. But tables are strict. */
+    /* Best way: standard table in RTL will have column 1 on Right. */
+    /* So Fajr (col 1) -> Right. Dhuhr -> Left of Fajr. Isso is correct for "Inverse" of English LTR. */
+    /* So just enabling dir=rtl on the table parent should do it. */
+}
+
+body.is-arabic .prayer-table-container table {
+    direction: rtl;
+}
+
+/* Ensure inputs in RTL look good */
+html[dir="rtl"] input,
+html[dir="rtl"] select,
+html[dir="rtl"] textarea {
+    direction: rtl;
+    text-align: right;
 }

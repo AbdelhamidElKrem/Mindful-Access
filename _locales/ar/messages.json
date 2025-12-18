@@ -145,5 +145,38 @@
     },
     "go": {
         "message": "انطلق"
+    },
+    "blockingDuration": {
+        "message": "مدة الحظر (دقائق)"
+    },
+    "manualCorrection": {
+        "message": "تصحيد يدوي للموقع"
+    },
+    "saveManualLoc": {
+        "message": "حفظ الموقع يدوياً"
+    },
+    "enterCityCountry": {
+        "message": "الرجاء إدخال المدينة والدولة."
+    },
+    "locating": {
+        "message": "جاري تحديد الموقع..."
+    },
+    "notSupported": {
+        "message": "تحديد الموقع غير مدعوم"
+    },
+    "gpsFound": {
+        "message": "تم العثور على GPS. جاري تحديد المكان..."
+    },
+    "locFoundUpdating": {
+        "message": "تم تحديد الموقع. جاري تحديث الأوقات..."
+    },
+    "updatedViaGps": {
+        "message": "تم التحديث عبر GPS"
+    },
+    "usingGpsCoords": {
+        "message": "استخدام إحداثيات GPS."
+    },
+    "errorUpdating": {
+        "message": "خطأ في التحديث. تأكد من اسم المدينة."
     }
 }
