@@ -1,11 +1,11 @@
-# Taqwa Timekeeper: Reclaim Your Time, Respect Your Prayer.
+# Mindful Access: Reclaim Your Time, Respect Your Prayer.
 
-**Taqwa Timekeeper** is more than just a website blocker; it is a digital companion designed to help you align your digital habits with your values. In a world of endless scrolling and distractions, this extension brings **intention** back to your browsing.
+**Mindful Access** is more than just a website blocker; it is a digital companion designed to help you align your digital habits with your values. In a world of endless scrolling and distractions, this extension brings **intention** back to your browsing.
 
 ## 🌟 Key Features
 
 ### 1. **Intentional Browsing**
-Instead of mindlessly opening social media or entertainment sites, Taqwa Timekeeper gently pauses you.
+Instead of mindlessly opening social media or entertainment sites, Mindful Access gently pauses you.
 - **The Check**: When you try to visit a blocked site (like YouTube or Facebook), you are greeted with a calm, beautiful screen.
 - **The Question**: It asks: *"Is this beneficial?"* or *"How long do you need?"*
 - **The Choice**: You can choose to proceed for a specific time (e.g., 15 mins) if it's necessary, or close the tab if it's just a distraction.
@@ -18,9 +18,11 @@ Need to get deep work done? Turn on **Focus Mode**.
 
 ### 3. **Prayer Time Integration 🕌**
 Never miss a prayer because you were lost in a screen.
-- **Auto-Detection**: Automatically finds accurate prayer times for your city (via GPS or manual entry).
+- **Precise Location**: Automatically detects your city via GPS or lets you **manually enter** your specific city for maximum accuracy.
+- **Customizable**: You decide how long the "Prayer Break" lasts (1-60 mins).
 - **Gentle Reminders**: Receive a silent notification **5 minutes before** every prayer.
-- **Prayer Break**: During prayer times (for 20 mins), the extension encourages you to take a break. Access to distractions is strictly paused to help you prepare for Salah.
+- **Prayer Break**: During prayer times, the extension encourages you to take a break. Access to distractions is strictly paused to help you prepare for Salah.
+- **Multilingual**: View prayer times in English or Arabic, with a seamless Right-to-Left (RTL) experience.
 
 ### 4. **Emergency Access**
 We know life happens. If you absolutely need to access a site during a block, a discreet "Emergency Continue" option is available to give you immediate access without hassle, but only when you truly need it.
