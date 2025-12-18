@@ -178,5 +178,20 @@
     },
     "errorUpdating": {
         "message": "خطأ في التحديث. تأكد من اسم المدينة."
+    },
+    "fajr": {
+        "message": "الفجر"
+    },
+    "dhuhr": {
+        "message": "الظهر"
+    },
+    "asr": {
+        "message": "العصر"
+    },
+    "maghrib": {
+        "message": "المغرب"
+    },
+    "isha": {
+        "message": "العشاء"
     }
 }

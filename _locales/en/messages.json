@@ -178,5 +178,20 @@
     },
     "errorUpdating": {
         "message": "Error updating times. Check city name."
+    },
+    "fajr": {
+        "message": "Fajr"
+    },
+    "dhuhr": {
+        "message": "Dhuhr"
+    },
+    "asr": {
+        "message": "Asr"
+    },
+    "maghrib": {
+        "message": "Maghrib"
+    },
+    "isha": {
+        "message": "Isha"
     }
 }

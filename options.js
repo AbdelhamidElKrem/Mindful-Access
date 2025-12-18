@@ -50,19 +50,14 @@ function saveDuration(e) {
 function loadLanguage() {
     chrome.storage.local.get(['preferredLanguage'], (data) => {
         const lang = data.preferredLanguage || 'default';
+        // Apply text selection logic
         const select = document.getElementById('lang-select');
         select.value = lang;
 
-        // Apply RTL/Arabic logic
-        if (lang === 'ar') {
-            document.documentElement.setAttribute('dir', 'rtl');
-            document.documentElement.setAttribute('lang', 'ar');
-            document.body.classList.add('is-arabic');
-        } else {
-            document.documentElement.setAttribute('dir', 'ltr');
-            document.documentElement.setAttribute('lang', 'en');
-            document.body.classList.remove('is-arabic');
-        }
+        // Logic handled by i18n.js applyLocalization() which runs on load
+        // But we can re-trigger it here to be safe or just let it run.
+        // Actually, i18n.js runs on DOMContentLoaded independently. 
+        // We just need to ensure the SELECT element is sync'd.
     });
 }
 
