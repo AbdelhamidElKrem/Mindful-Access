@@ -1,6 +1,6 @@
 {
     "appName": {
-        "message": "تقوى تايم كيبر"
+        "message": "الوصول الواعي"
     },
     "appDesc": {
         "message": "حافظ على وقتك ونيتك وتركيزك."
@@ -129,7 +129,7 @@
         "message": "الافتراضي للنظام"
     },
     "optionsTitle": {
-        "message": "إعدادات تقوى تايم كيبر"
+        "message": "إعدادات الوصول الواعي"
     },
     "options_add_placeholder": {
         "message": "example.com"

@@ -1,6 +1,6 @@
 {
     "appName": {
-        "message": "Taqwa Timekeeper"
+        "message": "Mindful Access"
     },
     "appDesc": {
         "message": "Protect your time, intentions, and focus."
@@ -129,7 +129,7 @@
         "message": "System Default"
     },
     "optionsTitle": {
-        "message": "Taqwa Timekeeper Settings"
+        "message": "Mindful Access Settings"
     },
     "options_add_placeholder": {
         "message": "example.com"
