@@ -7,8 +7,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const status = await sendMessage({ action: "checkStatus" });
 
     // 2. Get Target URL
-    const intentData = await sendMessage({ action: "getIntent" });
-    targetUrl = intentData.url;
+    const urlParams = new URLSearchParams(window.location.search);
+    const originParam = urlParams.get('origin');
+
+    if (originParam) {
+        targetUrl = originParam;
+    } else {
+        // Fallback to legacy method
+        const intentData = await sendMessage({ action: "getIntent" });
+        targetUrl = intentData.url;
+    }
+
+    // Debug
+    console.log("Blocking Target:", targetUrl);
 
     // Setup listeners immediately
     setupListeners();
@@ -45,6 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Start Flow
+    stepHistory.length = 0; // Clear history
     showStep('step-1');
 });
 
@@ -56,7 +68,15 @@ function sendMessage(msg) {
     });
 }
 
-function showStep(id) {
+const stepHistory = [];
+
+function showStep(id, pushToHistory = true) {
+    // Find currently active step
+    const current = document.querySelector('.step.active');
+    if (pushToHistory && current && current.id !== id) {
+        stepHistory.push(current.id);
+    }
+
     document.querySelectorAll('.step').forEach(el => el.classList.add('hidden'));
     document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
 
@@ -64,6 +84,13 @@ function showStep(id) {
     if (el) {
         el.classList.remove('hidden');
         el.classList.add('active');
+    }
+}
+
+function goBack() {
+    if (stepHistory.length > 0) {
+        const previousId = stepHistory.pop();
+        showStep(previousId, false); // Don't push to history when going back
     }
 }
 
@@ -160,6 +187,21 @@ function setupListeners() {
     if (focusBypassBtn) {
         focusBypassBtn.addEventListener('click', handleBypass);
     }
+
+    // --- Navigation Controls ---
+
+    // Back Buttons
+    document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', goBack);
+    });
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', (e) => {
+        // ArrowLeft -> Back
+        if (e.key === 'ArrowLeft') {
+            goBack();
+        }
+    });
 }
 
 async function grantAccess(minutes) {

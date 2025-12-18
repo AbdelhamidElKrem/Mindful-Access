@@ -36,32 +36,37 @@ chrome.runtime.onInstalled.addListener(() => {
 
 function createBlockRule(domain) {
     const id = Math.hash(domain);
+    const destination = chrome.runtime.getURL("intention.html");
+    // Escape domain for regex
+    const escapedDomain = domain.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return {
         id: id,
         priority: 1,
         action: {
             type: "redirect",
-            redirect: { extensionPath: "/intention.html" }
+            redirect: { regexSubstitution: `${destination}?origin=\\1` }
         },
         condition: {
-            urlFilter: domain,
+            // Match http/https + domain + optional path
+            regexFilter: `^(https?://(?:[^/]+\\.)?${escapedDomain}/.*)$`,
             resourceTypes: ["main_frame"]
         }
     };
 }
 
 function createStrictRule(id) {
+    const destination = chrome.runtime.getURL("intention.html");
     return {
         id: id,
-        priority: 50, // Higher than default (1), lower than exception (100)
+        priority: 50,
         action: {
             type: "redirect",
-            redirect: { extensionPath: "/intention.html" }
+            redirect: { regexSubstitution: `${destination}?origin=\\1` }
         },
         condition: {
-            urlFilter: "*", // Block everything
+            regexFilter: "^(https?://.*)$", // Capture the full URL
             resourceTypes: ["main_frame"],
-            excludedRequestDomains: ["api.aladhan.com"] // Allow API
+            excludedRequestDomains: ["api.aladhan.com", chrome.runtime.id] // Don't redirect extension itself or API
         }
     };
 }

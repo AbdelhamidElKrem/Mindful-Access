@@ -221,4 +221,41 @@ hr {
     height: 1px;
     background: #dfe6e9;
     margin: 2rem 0;
+}/* Back Button Styling */
+.back-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    line-height: 1;
+}
+
+.back-btn:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: translateX(-2px);
+}
+
+/* RTL Support for Back Button */
+html[dir="rtl"] .back-btn {
+    left: auto;
+    right: 15px;
+    transform: scaleX(-1);
+    /* Flip arrow */
+}
+
+html[dir="rtl"] .back-btn:hover {
+    transform: scaleX(-1) translateX(2px);
+}
+
+/* Ensure container handles absolute posh styling if needed, 
+   but .step is usually relative or static. Let's make .step relative. */
+.step {
+    position: relative;
 }
