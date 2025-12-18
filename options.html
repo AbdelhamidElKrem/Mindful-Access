@@ -44,16 +44,24 @@
             </div>
 
             <!-- Manual Location Input -->
-            <div class="manual-location-group"
+            <!-- Manual Location Input with Collapsible Details -->
+            <details class="manual-location-group"
                 style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--text-color);">Manual Correction</h3>
-                <div class="flex-row" style="gap: 10px;">
-                    <input type="text" id="manual-city" placeholder="City" style="flex: 1;">
-                    <input type="text" id="manual-country" placeholder="Country" style="flex: 1;">
+                <summary
+                    style="font-size: 1rem; margin-bottom: 15px; color: var(--text-color); cursor: pointer; outline: none; list-style: none;"
+                    data-i18n="manualCorrection">
+                    Manual Correction
+                </summary>
+
+                <div class="flex-row" style="gap: 10px; margin-top: 10px;">
+                    <input type="text" id="manual-city" data-i18n-placeholder="city" placeholder="City"
+                        style="flex: 1;">
+                    <input type="text" id="manual-country" data-i18n-placeholder="country" placeholder="Country"
+                        style="flex: 1;">
                 </div>
-                <button id="save-loc-btn" class="btn primary" style="width: 100%; margin-top: 10px;">Save Manual
-                    Location</button>
-            </div>
+                <button id="save-loc-btn" class="btn primary" style="width: 100%; margin-top: 10px;"
+                    data-i18n="saveManualLoc">Save Manual Location</button>
+            </details>
 
             <div id="loc-status" class="status" style="margin-top: 10px;"></div>
 
