@@ -190,9 +190,9 @@ function updatePrayerTimes() {
         let apiUrl = '';
 
         if (data.useGps && data.latitude && data.longitude) {
-            apiUrl = `http://api.aladhan.com/v1/timings?latitude=${data.latitude}&longitude=${data.longitude}&method=2`;
+            apiUrl = `http://api.aladhan.com/v1/timings?latitude=${data.latitude}&longitude=${data.longitude}`;
         } else if (data.city && data.country) {
-            apiUrl = `http://api.aladhan.com/v1/timingsByCity?city=${data.city}&country=${data.country}&method=2`;
+            apiUrl = `http://api.aladhan.com/v1/timingsByCity?city=${data.city}&country=${data.country}`;
         } else {
             return;
         }
