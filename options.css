@@ -325,4 +325,28 @@ input:checked+.slider:before {
     -webkit-transform: translateX(22px);
     -ms-transform: translateX(22px);
     transform: translateX(22px);
+}/* options.css additions */
+
+/* Manual Location Group */
+.manual-location-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.manual-location-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
+}
+
+.manual-location-group h3 {
+    font-weight: 500;
+    opacity: 0.9;
 }
