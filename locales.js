@@ -64,7 +64,10 @@ var translations = {
         "dhuhr": "Dhuhr",
         "asr": "Asr",
         "maghrib": "Maghrib",
-        "isha": "Isha"
+        "isha": "Isha",
+        "todaysPrayers": "Today's Prayers",
+        "gpsDetected": "(GPS Detected)",
+        "gpsLocation": "GPS Location"
     },
     "ar": {
         "appName": "الوصول الواعي",
@@ -131,6 +134,9 @@ var translations = {
         "dhuhr": "الظهر",
         "asr": "العصر",
         "maghrib": "المغرب",
-        "isha": "العشاء"
+        "isha": "العشاء",
+        "todaysPrayers": "صلوات اليوم",
+        "gpsDetected": "(تم التحديد عبر GPS)",
+        "gpsLocation": "موقع GPS"
     }
 };

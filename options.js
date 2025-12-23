@@ -79,7 +79,7 @@ function loadSites() {
 
         sites.forEach(site => {
             const li = document.createElement('li');
-            const removeText = chrome.i18n.getMessage("remove") || "Remove";
+            const removeText = (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.remove || "Remove") : "Remove");
             li.innerHTML = `
                 <span>${site}</span>
                 <button class="delete" data-site="${site}">${removeText}</button>
@@ -172,10 +172,17 @@ function loadLocation() {
             if (data.city && data.country) {
                 locString = `${data.city}, ${data.country}`;
                 if (data.useGps) {
-                    locString += " (GPS Detected)";
+                    const gpsText = (chrome.i18n.getMessage("gpsDetected") || (typeof translations !== 'undefined' ? (translations[chrome.storage.local.get(['preferredLanguage'], d => d.preferredLanguage) || 'en']?.gpsDetected || "(GPS Detected)") : "(GPS Detected)"));
+                    // Getting language synchronously is hard here, so let's rely on the simpler lookups or just hardcode assuming i18n.js might help?
+                    // actually, we can just use the key and let the element update? No, this is a string context.
+                    // Simplest: Just use English for now or fetch language?
+                    // Let's use the helper we used in popup.js approach or just fetch it.
+                    // But wait, i18n.js replaces text content. It doesn't replace partial strings efficiently.
+                    // Let's do this:
+                    locString += " " + (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.gpsDetected || "(GPS Detected)") : "(GPS Detected)");
                 }
             } else if (data.latitude) {
-                locString = `GPS: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
+                locString = (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.gpsLocation || "GPS Location") : "GPS Location") + `: ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`;
             }
             displayPrayerTable(data.prayerTimes, locString);
         }
@@ -268,7 +275,9 @@ function useGps() {
                     setTimeout(() => {
                         chrome.storage.local.get(['prayerTimes', 'city', 'country'], (d) => {
                             if (d.prayerTimes) {
-                                const locStr = (d.city && d.country) ? `${d.city}, ${d.country} (GPS Detected)` : "GPS Location";
+                                const gpsDetected = (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.gpsDetected || "(GPS Detected)") : "(GPS Detected)");
+                                const gpsLocation = (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.gpsLocation || "GPS Location") : "GPS Location");
+                                const locStr = (d.city && d.country) ? `${d.city}, ${d.country} ${gpsDetected}` : gpsLocation;
                                 displayPrayerTable(d.prayerTimes, locStr);
                                 status.textContent = "Updated via GPS";
                                 status.style.color = 'var(--success-color)';
@@ -285,7 +294,10 @@ function useGps() {
                     // Poll
                     setTimeout(() => {
                         chrome.storage.local.get(['prayerTimes'], (d) => {
-                            if (d.prayerTimes) displayPrayerTable(d.prayerTimes, "GPS Location");
+                            if (d.prayerTimes) {
+                                const gpsLocation = (typeof translations !== 'undefined' ? (translations[document.documentElement.lang]?.gpsLocation || "GPS Location") : "GPS Location");
+                                displayPrayerTable(d.prayerTimes, gpsLocation);
+                            }
                             status.textContent = "";
                         });
                     }, 2000);
