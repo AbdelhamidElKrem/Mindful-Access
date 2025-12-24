@@ -9,7 +9,7 @@ const RULE_ID_PRAYER = 29998;
 
 // Initialize state on install
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("Taqwa Timekeeper installed.");
+    console.log("Mindful Access installed.");
 
     const defaultSites = ['youtube.com', 'facebook.com', 'instagram.com', 'twitter.com', 'x.com'];
 
