@@ -88,10 +88,19 @@ function updateUI() {
                     const prayerNameKey = next.name.toLowerCase();
                     const displayName = (strings && strings[prayerNameKey]) ? strings[prayerNameKey] : next.name;
 
-                    // Update UI (No 'Next:' prefix per request)
+                    // Update UI
                     document.getElementById('next-prayer-name').textContent = displayName;
-                    document.getElementById('next-prayer-countdown').textContent = `-${formatTime(next.timeRemaining)}`;
-                    document.getElementById('prayer-progress-bar').style.width = `${next.percent}%`;
+
+                    if (next.isCurrent) {
+                        // Showing current prayer + elapsed
+                        document.getElementById('next-prayer-countdown').textContent = `+${formatTime(next.timeDiff)}`;
+                        document.getElementById('prayer-progress-bar').style.width = '100%';
+                    } else {
+                        // Showing next prayer - remaining
+                        document.getElementById('next-prayer-countdown').textContent = `-${formatTime(next.timeDiff)}`;
+                        document.getElementById('prayer-progress-bar').style.width = `${next.percent}%`;
+                    }
+
                 } else {
                     progressSection.classList.add('hidden');
                 }
@@ -129,10 +138,7 @@ function getNextPrayer(timings) {
     const now = new Date();
     const prayerNames = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
     let nextPrayer = null;
-    let prevPrayerTime = null;
-
-    // Sort/Iterate to find next
-    // Timings are "HH:MM"
+    let prevPrayer = null; // Object { name, time }
 
     // Create Date objects for today's prayers
     const prayers = prayerNames.map(name => {
@@ -142,20 +148,22 @@ function getNextPrayer(timings) {
         return { name, time: d };
     });
 
-    // Find the first one in the future
+    // Find the first one in the future, and identify immediate previous
     for (let i = 0; i < prayers.length; i++) {
         if (prayers[i].time > now) {
             nextPrayer = prayers[i];
-            // Prev prayer is either the one before, or Isha from yesterday (if Fajr is next)
-            // For simplicity, if Fajr is next, we can use midnight or 00:00 as start or try to get yesterday's Isha?
-            // Simplification: If i=0 (Fajr), previous point is roughly now - time since midnight or just 0 progress?
-            // Better: If Fajr is next, we calculate from 00:00 today.
+
             if (i === 0) {
-                const midnight = new Date();
-                midnight.setHours(0, 0, 0, 0);
-                prevPrayerTime = midnight;
+                // If Fajr is next, previous "prayer" conceptually was Isha yesterday.
+                // But for the +20min rule, we only care if we are literally 20 mins after THAT.
+                // Construct yesterday's Isha
+                const [hIsha, mIsha] = timings['Isha'].split(':').map(Number);
+                const prev = new Date();
+                prev.setDate(prev.getDate() - 1);
+                prev.setHours(hIsha, mIsha, 0, 0);
+                prevPrayer = { name: 'Isha', time: prev };
             } else {
-                prevPrayerTime = prayers[i - 1].time;
+                prevPrayer = prayers[i - 1];
             }
             break;
         }
@@ -171,11 +179,29 @@ function getNextPrayer(timings) {
         nextPrayer = { name: 'Fajr', time: tomorrow };
 
         // Prev was Isha today
-        prevPrayerTime = prayers[prayers.length - 1].time;
+        prevPrayer = prayers[prayers.length - 1];
     }
 
-    const totalDuration = nextPrayer.time - prevPrayerTime;
-    const elapsed = now - prevPrayerTime;
+    // --- CHECK 20 MINUTE RULE ---
+    // If we are within 20 minutes of the previous prayer start time
+    if (prevPrayer) {
+        const diffSincePrev = now - prevPrayer.time;
+        // 20 minutes in ms = 20 * 60 * 1000 = 1,200,000
+        if (diffSincePrev >= 0 && diffSincePrev <= 20 * 60 * 1000) {
+            return {
+                name: prevPrayer.name,
+                isCurrent: true,
+                timeDiff: diffSincePrev, // Elapsed time
+                percent: 100 // Bar full
+            };
+        }
+    }
+
+    // Standard "Next Prayer" Logic
+    const prevPrayerTimeCtx = prevPrayer ? prevPrayer.time : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // Fallback to midnight if somehow null (shouldn't be)
+
+    const totalDuration = nextPrayer.time - prevPrayerTimeCtx;
+    const elapsed = now - prevPrayerTimeCtx;
     const timeRemaining = nextPrayer.time - now;
 
     let percent = (elapsed / totalDuration) * 100;
@@ -183,7 +209,8 @@ function getNextPrayer(timings) {
 
     return {
         name: nextPrayer.name,
-        timeRemaining: timeRemaining,
+        isCurrent: false,
+        timeDiff: timeRemaining, // Remaining time
         percent: percent
     };
 }
