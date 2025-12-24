@@ -89,9 +89,11 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 // Listen for messages
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "startFocusMode") {
-        startFocusMode(message.duration);
+        startFocusMode(message.duration, sendResponse);
+        return true;
     } else if (message.action === "stopFocusMode") {
-        stopFocusMode();
+        stopFocusMode(sendResponse);
+        return true;
     } else if (message.action === "grantAccess") {
         handleGrantAccess(message.url, message.duration);
     } else if (message.action === "checkStatus") {
@@ -126,7 +128,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-function startFocusMode(minutes) {
+function startFocusMode(minutes, sendResponse) {
     const durationMs = minutes * 60 * 1000;
     const endTime = Date.now() + durationMs;
 
@@ -141,10 +143,12 @@ function startFocusMode(minutes) {
 
         // Set Alarm
         chrome.alarms.create("focusEnd", { when: endTime });
+
+        if (sendResponse) sendResponse({ success: true });
     });
 }
 
-function stopFocusMode() {
+function stopFocusMode(sendResponse) {
     chrome.storage.local.set({
         focusMode: false,
         focusEndTime: null
@@ -154,6 +158,7 @@ function stopFocusMode() {
             removeRuleIds: [RULE_ID_FOCUS]
         });
         chrome.alarms.clear("focusEnd");
+        if (sendResponse) sendResponse({ success: true });
     });
 }
 
@@ -195,9 +200,9 @@ function updatePrayerTimes() {
         let apiUrl = '';
 
         if (data.useGps && data.latitude && data.longitude) {
-            apiUrl = `http://api.aladhan.com/v1/timings?latitude=${data.latitude}&longitude=${data.longitude}`;
+            apiUrl = `https://api.aladhan.com/v1/timings?latitude=${data.latitude}&longitude=${data.longitude}`;
         } else if (data.city && data.country) {
-            apiUrl = `http://api.aladhan.com/v1/timingsByCity?city=${data.city}&country=${data.country}`;
+            apiUrl = `https://api.aladhan.com/v1/timingsByCity?city=${data.city}&country=${data.country}`;
         } else {
             return;
         }
