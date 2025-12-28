@@ -315,7 +315,7 @@ function checkPrayerNotification() {
         const timeStr = prayerTimes[name]; // "HH:MM"
         if (!timeStr) continue;
 
-        const [hours, minutes] = timeStr.split(':').map(Number);
+        const [hours, minutes] = timeStr.split(':').map(val => parseInt(val));
         const prayerDate = new Date();
         prayerDate.setHours(hours, minutes, 0, 0);
 
@@ -332,7 +332,9 @@ function checkPrayerNotification() {
                     type: 'basic',
                     iconUrl: 'icons/icon128.png',
                     title: 'Prayer Time Approaching',
-                    message: `${name} will start in 5 minutes. Prepare yourself.`
+                    message: `${name} will start in 5 minutes. Prepare yourself.`,
+                    priority: 2,
+                    requireInteraction: true
                 });
 
                 lastNotifiedPrayer = key;
