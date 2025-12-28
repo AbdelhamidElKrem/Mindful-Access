@@ -16,15 +16,20 @@ document.addEventListener('DOMContentLoaded', () => {
         durationInput.addEventListener('change', saveDuration);
     }
 
-    // Load Prayer Blocking State & Duration
-    chrome.storage.local.get(['prayerBlocking', 'prayerDuration'], (data) => {
+    // Load Prayer Blocking State & Duration & Method
+    chrome.storage.local.get(['prayerBlocking', 'prayerDuration', 'calculationMethod'], (data) => {
         const toggle = document.getElementById('prayer-blocking-toggle');
+        const methodSelect = document.getElementById('method-select');
 
         if (toggle) {
             toggle.checked = data.prayerBlocking !== false;
         }
         if (durationInput) {
             durationInput.value = data.prayerDuration || 20;
+        }
+        if (methodSelect) {
+            methodSelect.value = data.calculationMethod || 3; // Default to MWL (3)
+            methodSelect.addEventListener('change', saveCalculationMethod);
         }
     });
 
@@ -43,6 +48,24 @@ function saveDuration(e) {
     if (val < 1) val = 1;
     if (val > 60) val = 60;
     chrome.storage.local.set({ prayerDuration: val });
+}
+
+function saveCalculationMethod(e) {
+    const method = parseInt(e.target.value);
+    chrome.storage.local.set({ calculationMethod: method }, () => {
+        chrome.runtime.sendMessage({ action: "updatePrayerTimes" });
+
+        const status = document.getElementById('loc-status');
+        if (status) {
+            status.textContent = "Method Updated. Fetching times...";
+            status.style.color = 'var(--accent-color)';
+
+            // Re-load location to refresh table after a moment
+            setTimeout(() => {
+                loadLocation();
+            }, 1000);
+        }
+    });
 }
 
 // --- Localization ---
@@ -308,6 +331,10 @@ function useGps() {
         status.textContent = "GPS Error: " + error.message;
         status.style.color = '#d63031';
         console.error(error);
+    }, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
     });
 }
 

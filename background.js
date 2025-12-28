@@ -196,19 +196,23 @@ function handleGrantAccess(url, durationMinutes) {
 let prayerTimes = null;
 
 function updatePrayerTimes() {
-    chrome.storage.local.get(['city', 'country', 'useGps', 'latitude', 'longitude'], (data) => {
+    chrome.storage.local.get(['city', 'country', 'useGps', 'latitude', 'longitude', 'calculationMethod'], (data) => {
         let apiUrl = '';
+        const method = data.calculationMethod || 3; // Default MWL
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        const date = new Date();
+        const dateStr = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 
         if (data.useGps && data.latitude && data.longitude) {
-            apiUrl = `https://api.aladhan.com/v1/timings?latitude=${data.latitude}&longitude=${data.longitude}`;
+            apiUrl = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${data.latitude}&longitude=${data.longitude}&method=${method}&timezone=${timeZone}`;
         } else if (data.city && data.country) {
-            apiUrl = `https://api.aladhan.com/v1/timingsByCity?city=${data.city}&country=${data.country}`;
+            apiUrl = `https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=${data.city}&country=${data.country}&method=${method}&timezone=${timeZone}`;
         } else {
             return;
         }
 
-        const date = new Date();
-        const dateStr = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+        console.log("Fetching prayer times from:", apiUrl);
 
         fetch(apiUrl)
             .then(response => response.json())

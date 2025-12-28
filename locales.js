@@ -67,10 +67,11 @@ var translations = {
         "isha": "Isha",
         "todaysPrayers": "Today's Prayers",
         "gpsDetected": "(GPS Detected)",
-        "gpsLocation": "GPS Location"
+        "gpsLocation": "GPS Location",
+        "calcMethod": "Calculation Method"
     },
     "ar": {
-        "appName": "الوصول الواعي",
+        "appName": "التصفح الواعي",
         "appDesc": "حافظ على وقتك ونيتك وتركيزك.",
         "intentionCheck": "تجديد النية",
         "qBeneficial": "هل دخولك لهذا الموقع نافع؟",
@@ -113,7 +114,7 @@ var translations = {
         "errorUrl": "خطأ: الرابط غير معروف. الرجاء المحاولة مرة أخرى.",
         "language": "اللغة",
         "defaultLang": "الافتراضي للنظام",
-        "optionsTitle": "إعدادات الوصول الواعي",
+        "optionsTitle": "إعدادات التصفح الواعي",
         "options_add_placeholder": "example.com",
         "useGps": "استخدام GPS (تحديد تلقائي)",
         "selectDuration": "اختر مدة التركيز:",
@@ -137,6 +138,7 @@ var translations = {
         "isha": "العشاء",
         "todaysPrayers": "صلوات اليوم",
         "gpsDetected": "(تم التحديد عبر GPS)",
-        "gpsLocation": "موقع GPS"
+        "gpsLocation": "موقع GPS",
+        "calcMethod": "طريقة الحساب"
     }
 };

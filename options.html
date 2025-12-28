@@ -63,6 +63,23 @@
                     data-i18n="saveManualLoc">Save Manual Location</button>
             </details>
 
+            <!-- Calculation Method -->
+            <div style="margin-top: 20px;">
+                <label for="method-select" style="display: block; margin-bottom: 5px; color: var(--text-color);"
+                    data-i18n="calcMethod">Calculation Method</label>
+                <select id="method-select"
+                    style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-color);">
+                    <option value="5" selected>Egyptian General Authority of Survey</option>
+                    <option value="4">Umm Al-Qura University, Makkah</option>
+                    <option value="3">Muslim World League</option>
+                    <option value="2">Islamic Society of North America (ISNA)</option>
+                    <option value="1">University of Islamic Sciences, Karachi</option>
+                    <option value="12">Union Organization islamic de France</option>
+                    <option value="13">Diyanet İşleri Başkanlığı, Turkey</option>
+                    <option value="7">Institute of Geophysics, University of Tehran</option>
+                </select>
+            </div>
+
             <div id="loc-status" class="status" style="margin-top: 10px;"></div>
 
             <!-- Prayer Table (Hidden by default) -->
