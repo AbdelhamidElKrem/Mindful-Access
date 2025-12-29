@@ -264,11 +264,11 @@ function useGps() {
         return;
     }
 
-    navigator.geolocation.getCurrentPosition(position => {
+    const successCallback = (position) => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        status.textContent = "GPS Found. detecting location...";
+        status.textContent = "GPS Found. DETECTING location...";
 
         // Reverse Geocode to get name for the Table Display
         fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
@@ -326,16 +326,40 @@ function useGps() {
                     }, 2000);
                 });
             });
+    };
 
-    }, error => {
+    const errorCallback = (error, isRetry = false) => {
+        // If it was a timeout or unavailable and we haven't retried yet, try with lower accuracy
+        if (!isRetry && (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE)) {
+            status.textContent = "High accuracy failed. Retrying with low accuracy...";
+            console.log("Retrying geolocation with low accuracy...");
+            navigator.geolocation.getCurrentPosition(
+                successCallback,
+                (e) => errorCallback(e, true), // Final error handler
+                {
+                    enableHighAccuracy: false,
+                    timeout: 30000,
+                    maximumAge: 300000 // 5 mins
+                }
+            );
+            return;
+        }
+
         status.textContent = "GPS Error: " + error.message;
         status.style.color = '#d63031';
         console.error(error);
-    }, {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-    });
+    };
+
+    // First attempt: High Accuracy
+    navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback,
+        {
+            enableHighAccuracy: true,
+            timeout: 30000, // Increased to 30s
+            maximumAge: 300000 // Allow 5 min old cache
+        }
+    );
 }
 
 function displayPrayerTable(timings, locationName) {
