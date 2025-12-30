@@ -192,39 +192,96 @@ function handleGrantAccess(url, durationMinutes) {
     }
 }
 
+importScripts('libs/adhan.min.js');
+
 // Prayer Time Logic
 let prayerTimes = null;
 
 function updatePrayerTimes() {
     chrome.storage.local.get(['city', 'country', 'useGps', 'latitude', 'longitude', 'calculationMethod'], (data) => {
-        let apiUrl = '';
-        const method = data.calculationMethod || 3; // Default MWL
-        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+        const methodValue = data.calculationMethod || 3; // Default MWL
         const date = new Date();
         const dateStr = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 
-        if (data.useGps && data.latitude && data.longitude) {
-            apiUrl = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${data.latitude}&longitude=${data.longitude}&method=${method}&timezone=${timeZone}`;
-        } else if (data.city && data.country) {
-            apiUrl = `https://api.aladhan.com/v1/timingsByCity/${dateStr}?city=${data.city}&country=${data.country}&method=${method}&timezone=${timeZone}`;
-        } else {
-            return;
-        }
+        // Helper: Calculate times using Adhan.js
+        const calculateTimes = (lat, lng) => {
+            try {
+                const coordinates = new adhan.Coordinates(lat, lng);
+                let params = adhan.CalculationMethod.MuslimWorldLeague(); // Default fallback
 
-        console.log("Fetching prayer times from:", apiUrl);
+                // Map methodValue to Adhan method if possible, or just switch
+                // 3 is MWL in Aladhan. Adhan.js has specific methods.
+                // We'll use a simple mapping or default to MWL for now. 
+                // Detailed mapping can be added if we know the ID mapping.
+                // Assuming 3=MWL (MuslimWorldLeague), 2=ISNA (NorthAmerica), 4=Makkah, 5=Egyptian
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(json => {
-                if (json.code === 200) {
-                    prayerTimes = json.data.timings;
-                    console.log("Prayer times updated:", prayerTimes);
-                    // Save to 'prayerTimes' to match options.js expectation
-                    chrome.storage.local.set({ prayerTimes: prayerTimes, lastFetch: dateStr });
+                switch (methodValue) {
+                    case 1: params = adhan.CalculationMethod.Karachi(); break; // Jafari/Karachi often 1
+                    case 2: params = adhan.CalculationMethod.NorthAmerica(); break; // ISNA
+                    case 3: params = adhan.CalculationMethod.MuslimWorldLeague(); break; // MWL
+                    case 4: params = adhan.CalculationMethod.UmmAlQura(); break; // Makkah
+                    case 5: params = adhan.CalculationMethod.Egyptian(); break; // Egyptian
+                    case 8: params = adhan.CalculationMethod.Gulf(); break; // Gulf
+                    case 12: params = adhan.CalculationMethod.France(); break; // France
+                    case 13: params = adhan.CalculationMethod.Turkey(); break; // Turkey
+                    // Add more if needed, default MWL
                 }
-            })
-            .catch(err => console.error("Error fetching prayer times:", err));
+
+                const prayerTimesObj = new adhan.PrayerTimes(coordinates, date, params);
+
+
+
+                // Formatting times using Intl.DateTimeFormat
+                const formatTime = (d) => {
+                    return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+                };
+
+                const times = {
+                    Fajr: formatTime(prayerTimesObj.fajr),
+                    Dhuhr: formatTime(prayerTimesObj.dhuhr),
+                    Asr: formatTime(prayerTimesObj.asr),
+                    Maghrib: formatTime(prayerTimesObj.maghrib),
+                    Isha: formatTime(prayerTimesObj.isha)
+                };
+
+                prayerTimes = times;
+                console.log("Calculated Prayer Times:", times);
+                chrome.storage.local.set({ prayerTimes: times, lastFetch: dateStr, lastMethod: methodValue });
+
+            } catch (e) {
+                console.error("Calculation Error:", e);
+            }
+        };
+
+        if (data.latitude && data.longitude) {
+            console.log("Using stored coordinates for calculation.");
+            calculateTimes(data.latitude, data.longitude);
+        } else if (data.city && data.country && !data.useGps) {
+            console.log("No coordinates. Geocoding city:", data.city);
+            // Geocode using Nominatim (OpenStreetMap)
+            const query = `${data.city}, ${data.country}`;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+                .then(res => res.json())
+                .then(geoData => {
+                    if (geoData && geoData.length > 0) {
+                        const lat = parseFloat(geoData[0].lat);
+                        const lon = parseFloat(geoData[0].lon);
+                        console.log("Geocoded:", lat, lon);
+
+                        // Save coords so we don't geocode next time
+                        chrome.storage.local.set({ latitude: lat, longitude: lon }, () => {
+                            calculateTimes(lat, lon);
+                        });
+                    } else {
+                        console.error("Geocoding failed: City not found.");
+                        prayerTimes = null; // Clear to indicate error
+                        chrome.storage.local.remove('prayerTimes');
+                    }
+                })
+                .catch(e => console.error("Geocoding network error:", e));
+        } else {
+            console.log("No location set.");
+        }
     });
 }
 

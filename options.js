@@ -63,6 +63,8 @@ function saveCalculationMethod(e) {
             // Re-load location to refresh table after a moment
             setTimeout(() => {
                 loadLocation();
+                status.textContent = "Updated.";
+                setTimeout(() => { status.textContent = ""; }, 2000);
             }, 1000);
         }
     });
@@ -250,7 +252,7 @@ function saveLocation() {
                     status.style.color = '#d63031';
                 }
             });
-        }, 2000);
+        }, 6000); // Increased timeout for Geocoding
     });
 }
 
